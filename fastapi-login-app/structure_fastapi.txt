@@ -1,0 +1,259 @@
+폴더 PATH의 목록입니다.
+볼륨 일련 번호는 F09C-115B입니다.
+C:.
+|   .env
+|   prompts.json
+|   requirements.txt
+|   snapshot.txt
+|   structure_fastapi.txt
+|   
++---app
+|   |   auth.py
+|   |   auth_utils.py
+|   |   main.py
+|   |   models.py
+|   |   __init__.py
+|   |   
+|   +---core
+|   |   |   logging.py
+|   |   |   openai_config.py
+|   |   |   settings.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           logging.cpython-312.pyc
+|   |           openai_config.cpython-312.pyc
+|   |           settings.cpython-312.pyc
+|   |           __init__.cpython-312.pyc
+|   |           
+|   +---middleware
+|   |   |   request_context.py
+|   |   |   
+|   |   \---__pycache__
+|   |           request_context.cpython-312.pyc
+|   |           
+|   +---models
+|   |       rc22.py
+|   |       rc31.py
+|   |       rc40.py
+|   |       
+|   +---prompts
+|   |   |   base.py
+|   |   |   micro_topics.py
+|   |   |   prompt_data.py
+|   |   |   prompt_manager.py
+|   |   |   router_prompt.py
+|   |   |   type_mapping.py
+|   |   |   __init__.py
+|   |   |   
+|   |   +---items
+|   |   |   |   lc01.py
+|   |   |   |   lc02.py
+|   |   |   |   lc03.py
+|   |   |   |   lc04.py
+|   |   |   |   lc05.py
+|   |   |   |   lc06.py
+|   |   |   |   lc16_17.py
+|   |   |   |   rc18.py
+|   |   |   |   rc19.py
+|   |   |   |   rc20.py
+|   |   |   |   rc21.py
+|   |   |   |   rc22.py
+|   |   |   |   rc24.py
+|   |   |   |   rc25.py
+|   |   |   |   rc322.py
+|   |   |   |   rc41_42.py
+|   |   |   |   _init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           lc01.cpython-312.pyc
+|   |   |           lc02.cpython-312.pyc
+|   |   |           lc03.cpython-312.pyc
+|   |   |           lc04.cpython-312.pyc
+|   |   |           lc05.cpython-312.pyc
+|   |   |           lc06.cpython-312.pyc
+|   |   |           lc16_17.cpython-312.pyc
+|   |   |           rc18.cpython-312.pyc
+|   |   |           rc19.cpython-312.pyc
+|   |   |           rc20.cpython-312.pyc
+|   |   |           rc21.cpython-312.pyc
+|   |   |           rc22.cpython-312.pyc
+|   |   |           rc24.cpython-312.pyc
+|   |   |           rc25.cpython-312.pyc
+|   |   |           rc41_42.cpython-312.pyc
+|   |   |           
+|   |   \---__pycache__
+|   |           base.cpython-312.pyc
+|   |           micro_topics.cpython-312.pyc
+|   |           prompt_data.cpython-312.pyc
+|   |           prompt_manager.cpython-312.pyc
+|   |           router_prompt.cpython-312.pyc
+|   |           type_mapping.cpython-312.pyc
+|   |           __init__.cpython-312.pyc
+|   |           
+|   +---routes
+|   |   |   export_docx.py
+|   |   |   generate.py
+|   |   |   generate_multi.py
+|   |   |   generate_one.py
+|   |   |   image_gen - 복사본.py
+|   |   |   image_gen.py
+|   |   |   items.py
+|   |   |   items_meta.py
+|   |   |   pages copy.py
+|   |   |   pages.py
+|   |   |   suggest_types.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           export_docx.cpython-312.pyc
+|   |           generate.cpython-312.pyc
+|   |           generate_multi.cpython-312.pyc
+|   |           generate_one.cpython-312.pyc
+|   |           image_gen.cpython-312.pyc
+|   |           items.cpython-312.pyc
+|   |           items_meta.cpython-312.pyc
+|   |           pages.cpython-312.pyc
+|   |           suggest_types.cpython-312.pyc
+|   |           __init__.cpython-312.pyc
+|   |           
+|   +---schemas
+|   |   |   error.py
+|   |   |   export_docx.py
+|   |   |   generate.py
+|   |   |   items_lc.py
+|   |   |   items_mcq.py
+|   |   |   items_rc28.py
+|   |   |   items_rc34.py
+|   |   |   items_rc_set.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           export_docx.cpython-312.pyc
+|   |           generate.cpython-312.pyc
+|   |           items_lc.cpython-312.pyc
+|   |           items_mcq.cpython-312.pyc
+|   |           items_rc28.cpython-312.pyc
+|   |           items_rc34.cpython-312.pyc
+|   |           items_rc_set.cpython-312.pyc
+|   |           __init__.cpython-312.pyc
+|   |           
+|   +---services
+|   |   |   docx_export.py
+|   |   |   http_client.py
+|   |   |   image_adapters - 복사본.py
+|   |   |   image_adapters.py
+|   |   |   item_generator.py
+|   |   |   item_pipeline.py
+|   |   |   llm_client.py
+|   |   |   mock_java.py
+|   |   |   postprocess.py
+|   |   |   routing_rules.py
+|   |   |   type_router.py
+|   |   |   validators.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           docx_export.cpython-312.pyc
+|   |           http_client.cpython-312.pyc
+|   |           image_adapters.cpython-312.pyc
+|   |           item_generator.cpython-312.pyc
+|   |           item_pipeline.cpython-312.pyc
+|   |           llm_client.cpython-312.pyc
+|   |           mock_java.cpython-312.pyc
+|   |           postprocess.cpython-312.pyc
+|   |           routing_rules.cpython-312.pyc
+|   |           type_router.cpython-312.pyc
+|   |           validators.cpython-312.pyc
+|   |           __init__.cpython-312.pyc
+|   |           
+|   +---specs
+|   |   |   auto_from_prompt_data.py
+|   |   |   base.py
+|   |   |   generate_with_retry.py
+|   |   |   helpers.py
+|   |   |   lc06_payment_amount.py
+|   |   |   lc_standard.py
+|   |   |   passage_preprocessor.py
+|   |   |   rc18_purpose.py
+|   |   |   rc19_emotion.py
+|   |   |   rc20_argument.py
+|   |   |   rc21_underlined_inference.py
+|   |   |   rc22_mainpoint.py
+|   |   |   rc23_topic.py
+|   |   |   rc24_title.py
+|   |   |   rc25_graph_info+back.py
+|   |   |   rc25_graph_info.py
+|   |   |   rc26_connective_function.py
+|   |   |   rc27_irrelevant_sentence.py
+|   |   |   rc28_detail_true_false.py
+|   |   |   rc29_grammar.py
+|   |   |   rc29_grammar_back.py
+|   |   |   rc30_lexical_appropriateness.py
+|   |   |   rc31_blank_word.py
+|   |   |   rc32_blank_phrase.py
+|   |   |   rc33_blank_clause.py
+|   |   |   rc34_mcq.py
+|   |   |   rc35_insertion.py
+|   |   |   rc36_order_easy.py
+|   |   |   rc37_order_hard.py
+|   |   |   rc38_insertion_sentence.py
+|   |   |   rc39_insertion_paragraph.py
+|   |   |   rc40_summary.py
+|   |   |   rc41_42_set.py
+|   |   |   rc43_45_set.py
+|   |   |   rc_generic_mcq.py
+|   |   |   rc_set.py
+|   |   |   registry.py
+|   |   |   utils.py
+|   |   |   _base_mcq.py
+|   |   |   
+|   |   \---__pycache__
+|   |           auto_from_prompt_data.cpython-312.pyc
+|   |           base.cpython-312.pyc
+|   |           helpers.cpython-312.pyc
+|   |           lc06_payment_amount.cpython-312.pyc
+|   |           lc_standard.cpython-312.pyc
+|   |           passage_preprocessor.cpython-312.pyc
+|   |           rc18_purpose.cpython-312.pyc
+|   |           rc19_emotion.cpython-312.pyc
+|   |           rc20_argument.cpython-312.pyc
+|   |           rc21_underlined_inference.cpython-312.pyc
+|   |           rc22_mainpoint.cpython-312.pyc
+|   |           rc23_topic.cpython-312.pyc
+|   |           rc24_title.cpython-312.pyc
+|   |           rc25_graph_info.cpython-312.pyc
+|   |           rc26_connective_function.cpython-312.pyc
+|   |           rc27_irrelevant_sentence.cpython-312.pyc
+|   |           rc28_detail_true_false.cpython-312.pyc
+|   |           rc29_grammar.cpython-312.pyc
+|   |           rc30_lexical_appropriateness.cpython-312.pyc
+|   |           rc31_blank_word.cpython-312.pyc
+|   |           rc32_blank_phrase.cpython-312.pyc
+|   |           rc33_blank_clause.cpython-312.pyc
+|   |           rc34_mcq.cpython-312.pyc
+|   |           rc35_insertion.cpython-312.pyc
+|   |           rc36_order_easy.cpython-312.pyc
+|   |           rc37_order_hard.cpython-312.pyc
+|   |           rc38_insertion_sentence.cpython-312.pyc
+|   |           rc39_insertion_paragraph.cpython-312.pyc
+|   |           rc40_summary.cpython-312.pyc
+|   |           rc41_42_set.cpython-312.pyc
+|   |           rc43_45_set.cpython-312.pyc
+|   |           rc_generic_mcq.cpython-312.pyc
+|   |           rc_set.cpython-312.pyc
+|   |           registry.cpython-312.pyc
+|   |           utils.cpython-312.pyc
+|   |           _base_mcq.cpython-312.pyc
+|   |           
+|   \---__pycache__
+|           auth.cpython-312.pyc
+|           main.cpython-312.pyc
+|           models.cpython-312.pyc
+|           __init__.cpython-312.pyc
+|           
+\---data
+        micro_topics.bak.json
+        micro_topics.json
+        micro_topics20250913.json
+        
