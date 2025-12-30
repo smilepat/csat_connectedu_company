@@ -189,6 +189,52 @@ class PromptManager:
     7) OUTPUT RULES (공통)
     """
 
+    # 지원하는 문항 유형 목록 (items 디렉토리 기반)
+    _ALL_TYPES = [
+        "LC01", "LC02", "LC03", "LC04", "LC05", "LC06", "LC07", "LC08", "LC09",
+        "LC10", "LC11", "LC12", "LC13", "LC14", "LC15", "LC16_17",
+        "RC18", "RC19", "RC20", "RC21", "RC22", "RC24", "RC25", "RC26", "RC27",
+        "RC28", "RC29", "RC30", "RC31", "RC32", "RC33", "RC34", "RC35", "RC36",
+        "RC37", "RC38", "RC39", "RC40", "RC41_42", "RC43_45"
+    ]
+
+    @classmethod
+    def get_all_types(cls) -> list[str]:
+        """모든 문항 유형 목록 반환"""
+        return cls._ALL_TYPES.copy()
+
+    @classmethod
+    def get_listening_types(cls) -> list[str]:
+        """듣기(LC) 유형만 반환"""
+        return [t for t in cls._ALL_TYPES if t.startswith("LC")]
+
+    @classmethod
+    def get_reading_types(cls) -> list[str]:
+        """독해(RC) 유형만 반환"""
+        return [t for t in cls._ALL_TYPES if t.startswith("RC")]
+
+    @classmethod
+    def get_spec(cls, item_type: str) -> Optional[dict]:
+        """문항 유형의 스펙 반환"""
+        _, spec, _ = _load_item_template(item_type.upper())
+        return spec
+
+    @classmethod
+    def get_title(cls, item_type: str) -> Optional[str]:
+        """문항 유형의 제목 반환"""
+        _, spec, title = _load_item_template(item_type.upper())
+        if title:
+            return title
+        if spec and isinstance(spec, dict):
+            return spec.get("title")
+        return None
+
+    @classmethod
+    def is_set_type(cls, item_type: str) -> bool:
+        """세트형 문항인지 확인"""
+        key = (item_type or "").upper()
+        return key in LC_SET_IDS or "_" in key or "-" in key or _in_range(key, *RC_SET_RANGE)
+
     difficulty_instructions = {
         "easy": (
             "\n\n**난이도 조정**: 쉬운 수준으로 만들어주세요.\n"
