@@ -1,9 +1,11 @@
 # app/main.py
 import os  # ✅ 추가: APP_DEBUG 읽기용
+from pathlib import Path
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, Response, FileResponse, HTMLResponse
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 import logging
 import time
@@ -162,6 +164,38 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 # ---------- 헬스 체크 ----------
-@app.get("/dashboard")
-def dashboard():
+@app.get("/api/health")
+def health_check():
     return {"message": "OK"}
+
+# ---------- 프론트엔드 정적 파일 서빙 ----------
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATES_DIR = BASE_DIR / "templates"
+
+# 정적 파일 마운트 (CSS, JS 등)
+if (BASE_DIR / "static").exists():
+    app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+
+# 메인 페이지 (로그인)
+@app.get("/", response_class=HTMLResponse)
+async def serve_index():
+    index_file = TEMPLATES_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
+    return HTMLResponse("<h1>ConnectedU ItemGen API</h1><p><a href='/docs'>API 문서</a></p>")
+
+# 대시보드 페이지
+@app.get("/dashboard.html", response_class=HTMLResponse)
+async def serve_dashboard():
+    dashboard_file = TEMPLATES_DIR / "dashboard.html"
+    if dashboard_file.exists():
+        return FileResponse(dashboard_file)
+    return HTMLResponse("<h1>Dashboard not found</h1>")
+
+# 문항 생성 페이지
+@app.get("/generate.html", response_class=HTMLResponse)
+async def serve_generate():
+    generate_file = TEMPLATES_DIR / "generate.html"
+    if generate_file.exists():
+        return FileResponse(generate_file)
+    return HTMLResponse("<h1>Generate page not found</h1>")

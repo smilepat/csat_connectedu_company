@@ -18,12 +18,12 @@ r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
 @router.post("/login")
 def login(request: LoginRequest):
-    print("✅ /api/auth/login 요청 도착")
+    print("[LOGIN] /api/auth/login request received")
     try:
         res = requests.post(JAVA_API_URL, json=request.dict(), timeout=5)
         data = res.json()
 
-        print("응답 데이터:", data)
+        print("[LOGIN] Response data:", data)
 
         if "coach_info" not in data:
             raise HTTPException(status_code=500, detail="Java 응답에 coach_info가 없습니다")

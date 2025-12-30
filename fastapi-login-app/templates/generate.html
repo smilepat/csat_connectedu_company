@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectedU ItemGen - 문항 생성</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        body {
+            background-color: #f5f7fb;
+        }
+        .navbar {
+            background: var(--primary-gradient);
+        }
+        .sidebar {
+            background: white;
+            min-height: calc(100vh - 56px);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+        .sidebar .nav-link {
+            color: #555;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 5px 10px;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .btn-generate {
+            background: var(--primary-gradient);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .type-badge {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .type-badge:hover {
+            transform: scale(1.1);
+        }
+        .type-badge.selected {
+            background-color: #667eea !important;
+        }
+        .passage-textarea {
+            min-height: 200px;
+            border-radius: 10px;
+        }
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .result-card .passage {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+        }
+        .result-card .options {
+            list-style: none;
+            padding: 0;
+        }
+        .result-card .options li {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .result-card .options li:hover {
+            background: #e9ecef;
+        }
+        .result-card .options li.correct {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .streaming-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .suggestion-card {
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .suggestion-card:hover {
+            border-color: #667eea;
+        }
+        .suggestion-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/dashboard.html">
+                <i class="bi bi-book me-2"></i>ConnectedU ItemGen
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3" id="userInfo"></span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="bi bi-box-arrow-right me-1"></i>로그아웃
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <nav class="nav flex-column py-3">
+                    <a class="nav-link" href="/dashboard.html">
+                        <i class="bi bi-grid-fill"></i>대시보드
+                    </a>
+                    <a class="nav-link active" href="/generate.html">
+                        <i class="bi bi-lightning-fill"></i>문항 생성
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-file-earmark-text"></i>페이지 관리
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-list-check"></i>문항 목록
+                    </a>
+                    <hr class="mx-3">
+                    <a class="nav-link" href="/docs" target="_blank">
+                        <i class="bi bi-code-slash"></i>API 문서
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <h4 class="mb-4"><i class="bi bi-lightning-fill me-2"></i>문항 생성</h4>
+
+                <div class="row">
+                    <!-- Input Section -->
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-white border-0 pt-4">
+                                <h5 class="mb-0">1. 지문 입력</h5>
+                            </div>
+                            <div class="card-body">
+                                <textarea class="form-control passage-textarea" id="passage"
+                                    placeholder="영어 지문을 입력하세요..."></textarea>
+                                <div class="mt-3">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="suggestTypes()">
+                                        <i class="bi bi-lightbulb me-1"></i>유형 추천받기
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="loadSamplePassage()">
+                                        <i class="bi bi-file-text me-1"></i>샘플 지문
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Type Suggestions -->
+                        <div class="card mb-4" id="suggestionsCard" style="display: none;">
+                            <div class="card-header bg-white border-0 pt-4">
+                                <h5 class="mb-0">추천 문항 유형</h5>
+                            </div>
+                            <div class="card-body" id="suggestionsBody">
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header bg-white border-0 pt-4">
+                                <h5 class="mb-0">2. 문항 유형 선택</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">듣기 (LC)</label>
+                                    <div id="lcTypes" class="d-flex flex-wrap gap-2">
+                                        <span class="spinner-border spinner-border-sm"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="form-label fw-bold text-success">독해 (RC)</label>
+                                    <div id="rcTypes" class="d-flex flex-wrap gap-2">
+                                        <span class="spinner-border spinner-border-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header bg-white border-0 pt-4">
+                                <h5 class="mb-0">3. 생성 옵션</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">난이도</label>
+                                        <select class="form-select" id="difficulty">
+                                            <option value="easy">쉬움 (Easy)</option>
+                                            <option value="medium" selected>보통 (Medium)</option>
+                                            <option value="hard">어려움 (Hard)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">주제</label>
+                                        <input type="text" class="form-control" id="topic" placeholder="예: 환경, 기술">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-generate w-100" onclick="generateItem()" id="generateBtn">
+                                    <i class="bi bi-lightning-fill me-2"></i>문항 생성
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Output Section -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-white border-0 pt-4 d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">생성 결과</h5>
+                                <span id="streamingStatus" style="display: none;">
+                                    <span class="streaming-indicator"></span>
+                                    <small class="ms-2 text-muted">생성 중...</small>
+                                </span>
+                            </div>
+                            <div class="card-body" id="resultContainer">
+                                <div class="text-center text-muted py-5">
+                                    <i class="bi bi-inbox" style="font-size: 48px;"></i>
+                                    <p class="mt-3">문항 유형을 선택하고 생성 버튼을 클릭하세요.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = '';
+        const token = localStorage.getItem('token');
+        let selectedType = null;
+        let allTypes = [];
+
+        if (!token) {
+            window.location.href = '/';
+        }
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        document.getElementById('userInfo').textContent = user.user_name || user.user_id || '';
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        // 문항 유형 로드
+        async function loadItemTypes() {
+            try {
+                const response = await fetch(API_BASE + '/api/items/types');
+                const data = await response.json();
+
+                if (data.types) {
+                    allTypes = data.types;
+                    const lcTypes = data.types.filter(t => t.startsWith('LC'));
+                    const rcTypes = data.types.filter(t => t.startsWith('RC'));
+
+                    document.getElementById('lcTypes').innerHTML = lcTypes.map(t =>
+                        `<span class="badge bg-primary type-badge" onclick="selectType('${t}')">${t}</span>`
+                    ).join('');
+
+                    document.getElementById('rcTypes').innerHTML = rcTypes.map(t =>
+                        `<span class="badge bg-success type-badge" onclick="selectType('${t}')">${t}</span>`
+                    ).join('');
+                }
+            } catch (error) {
+                console.error('Failed to load item types:', error);
+            }
+        }
+
+        // 유형 선택
+        function selectType(type) {
+            selectedType = type;
+            document.querySelectorAll('.type-badge').forEach(el => {
+                el.classList.remove('selected');
+                if (el.textContent === type) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+
+        // 샘플 지문 로드
+        function loadSamplePassage() {
+            document.getElementById('passage').value = `The concept of sustainable development has gained increasing attention in recent years as the world grapples with environmental challenges. At its core, sustainable development seeks to meet the needs of the present without compromising the ability of future generations to meet their own needs. This approach requires a delicate balance between economic growth, environmental protection, and social equity.
+
+One of the key aspects of sustainable development is the efficient use of natural resources. As the global population continues to grow, the demand for resources such as water, energy, and raw materials increases. Without careful management, these resources could be depleted, leading to environmental degradation and economic instability. Therefore, sustainable development emphasizes the importance of renewable energy sources, recycling, and conservation efforts.
+
+Furthermore, sustainable development recognizes that environmental issues transcend national boundaries. Climate change, for instance, affects all countries regardless of their level of development. This global nature of environmental problems necessitates international cooperation and coordinated action. Countries must work together to reduce greenhouse gas emissions, protect biodiversity, and develop sustainable technologies.`;
+        }
+
+        // 유형 추천
+        async function suggestTypes() {
+            const passage = document.getElementById('passage').value.trim();
+            if (!passage) {
+                alert('지문을 먼저 입력해주세요.');
+                return;
+            }
+
+            const card = document.getElementById('suggestionsCard');
+            const body = document.getElementById('suggestionsBody');
+            card.style.display = 'block';
+            body.innerHTML = '<div class="text-center"><span class="spinner-border"></span> 분석 중...</div>';
+
+            try {
+                const response = await fetch(API_BASE + '/api/suggest_types', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ passage, top_k: 6 })
+                });
+
+                const data = await response.json();
+
+                if (data.ok && data.candidates) {
+                    body.innerHTML = data.candidates.map(c => `
+                        <div class="card suggestion-card mb-2 p-3" onclick="selectType('${c.type}')">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge ${c.type.startsWith('LC') ? 'bg-primary' : 'bg-success'} me-2">${c.type}</span>
+                                <small class="text-muted">적합도: ${(c.fit * 100).toFixed(0)}%</small>
+                            </div>
+                            <small class="text-muted mt-2">${c.reason || ''}</small>
+                        </div>
+                    `).join('');
+                } else {
+                    body.innerHTML = '<div class="alert alert-warning">추천 결과가 없습니다.</div>';
+                }
+            } catch (error) {
+                body.innerHTML = `<div class="alert alert-danger">오류: ${error.message}</div>`;
+            }
+        }
+
+        // 문항 생성
+        async function generateItem() {
+            if (!selectedType) {
+                alert('문항 유형을 선택해주세요.');
+                return;
+            }
+
+            const passage = document.getElementById('passage').value.trim();
+            const difficulty = document.getElementById('difficulty').value;
+            const topic = document.getElementById('topic').value.trim();
+
+            const btn = document.getElementById('generateBtn');
+            const container = document.getElementById('resultContainer');
+            const status = document.getElementById('streamingStatus');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>생성 중...';
+            status.style.display = 'inline-block';
+            container.innerHTML = '<div class="text-center py-5"><span class="spinner-border"></span></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/generate/${selectedType}?stream=false`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        difficulty,
+                        topic: topic || '일반',
+                        interest: '기본',
+                        passage: passage || undefined
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    container.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                } else {
+                    displayResult(data);
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="alert alert-danger">오류: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-lightning-fill me-2"></i>문항 생성';
+                status.style.display = 'none';
+            }
+        }
+
+        // 결과 표시
+        function displayResult(data) {
+            const container = document.getElementById('resultContainer');
+            const item = data.item || data;
+
+            let optionsHtml = '';
+            if (item.options && item.options.length > 0) {
+                const labels = ['①', '②', '③', '④', '⑤'];
+                optionsHtml = `
+                    <ul class="options">
+                        ${item.options.map((opt, i) => `
+                            <li class="${item.answer === i + 1 ? 'correct' : ''}">
+                                ${labels[i]} ${opt}
+                                ${item.answer === i + 1 ? '<i class="bi bi-check-circle-fill text-success ms-2"></i>' : ''}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="result-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-primary">${selectedType}</span>
+                        <small class="text-muted">생성 완료</small>
+                    </div>
+
+                    ${item.passage ? `
+                        <div class="passage">
+                            <small class="text-muted d-block mb-2">지문</small>
+                            ${item.passage}
+                        </div>
+                    ` : ''}
+
+                    ${item.question ? `
+                        <div class="mb-3">
+                            <strong>문제:</strong><br>
+                            ${item.question}
+                        </div>
+                    ` : ''}
+
+                    ${optionsHtml}
+
+                    ${item.explain ? `
+                        <div class="mt-3 p-3 bg-light rounded">
+                            <small class="text-muted d-block mb-1">해설</small>
+                            ${item.explain}
+                        </div>
+                    ` : ''}
+
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-outline-primary" onclick="copyResult()">
+                            <i class="bi bi-clipboard me-1"></i>복사
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="saveItem()">
+                            <i class="bi bi-save me-1"></i>저장
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Store result for copying/saving
+            window.lastResult = item;
+        }
+
+        function copyResult() {
+            if (window.lastResult) {
+                const text = JSON.stringify(window.lastResult, null, 2);
+                navigator.clipboard.writeText(text);
+                alert('결과가 클립보드에 복사되었습니다.');
+            }
+        }
+
+        function saveItem() {
+            alert('저장 기능은 개발 중입니다.');
+        }
+
+        // 초기화
+        loadItemTypes();
+    </script>
+</body>
+</html>
