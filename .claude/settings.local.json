@@ -3,7 +3,17 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(mkdir:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m pip install:*)",
+      "Bash(cmd.exe /c \"pip install -r c:/project/csat_connectedu_company/fastapi-login-app/requirements.txt\")",
+      "Bash(cmd.exe /c \"pip install -r \"\"c:\\\\project\\\\csat_connectedu_company\\\\fastapi-login-app\\\\requirements.txt\"\"\")",
+      "Bash(powershell.exe -Command \"pip install -r ''c:\\\\project\\\\csat_connectedu_company\\\\fastapi-login-app\\\\requirements.txt''\")",
+      "Bash(powershell.exe -Command \"python -m pip install -r ''c:\\\\project\\\\csat_connectedu_company\\\\fastapi-login-app\\\\requirements.txt''\")",
+      "Bash(powershell.exe -Command \"python --version; pip --version\")",
+      "Bash(powershell.exe -Command \"Get-Command python; Get-Command py\")",
+      "Bash(powershell.exe -Command \"py -m pip install -r ''c:\\\\project\\\\csat_connectedu_company\\\\fastapi-login-app\\\\requirements.txt''\")",
+      "Bash(powershell.exe -Command:*)"
     ]
   }
 }
